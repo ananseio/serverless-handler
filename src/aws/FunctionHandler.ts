@@ -1,14 +1,17 @@
-import { Context, Callback } from 'aws-lambda';
+import { Callback, Context } from 'aws-lambda';
 import {
-  HandlerFunction,
   FunctionHandler as FuncHandler,
-  FunctionHandlerConstructor
-} from "../FunctionHandler";
+  FunctionHandlerConstructor,
+  HandlerFunction
+} from '../FunctionHandler';
 
+/**
+ * AWS Lambda function handler
+ */
 export class FunctionHandler extends FuncHandler<Context> {
 }
 
-export function Handler(target: Object, name: string, desc: TypedPropertyDescriptor<HandlerFunction>) {
+export function Handler(target: Object, name: string, desc: TypedPropertyDescriptor<HandlerFunction>): void {
   const ctor = target.constructor as FunctionHandlerConstructor<FunctionHandler>;
   const handler = desc.value!.decorated || desc.value!;
 
@@ -21,15 +24,16 @@ export function Handler(target: Object, name: string, desc: TypedPropertyDescrip
       if (callback) {
         promise
           .then(result => callback(undefined, result))
-          .catch(error => callback(error));
+          .catch(callback);
       }
 
     } catch (error) {
       promise = Promise.reject(error);
       if (callback) {
-        promise.catch(error => callback(error));
+        promise.catch(callback);
       }
     }
+
     return promise;
   };
 

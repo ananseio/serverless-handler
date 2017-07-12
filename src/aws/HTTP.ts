@@ -1,30 +1,43 @@
 import { APIGatewayEvent, ProxyResult } from 'aws-lambda';
-import { FunctionHandler } from "./FunctionHandler";
-import { HTTPEvent, HTTPResponse, Headers } from "../HTTP";
-import { HandlerFunction } from "../FunctionHandler";
+import { HandlerFunction } from '../FunctionHandler';
+import { Headers, HTTPEvent, HTTPResponse } from '../HTTP';
+import { FunctionHandler } from './FunctionHandler';
 
-export type HTTPOptions = {
-  format?: "json";
+export interface HTTPOptions {
+  /**
+   * Request/Response body format. Only `json` is supported
+   */
+  format?: 'json';
+
+  /**
+   *  CORS options
+   */
   cors?: {
+    /**
+     * List of allowed origins
+     */
     origins?: string[];
+
+    /**
+     * Whether credentials (Cookies) are allowed to be sent
+     */
     credentials?: boolean;
   };
 }
 
-function createCorsHeaders(opts: HTTPOptions, event: HTTPEvent<any>): Headers | null {
+function createCorsHeaders(opts: HTTPOptions, event: HTTPEvent<{}>): Headers | null {
   const headers: Headers = {};
   if (opts.cors) {
     if (!opts.cors.origins && !opts.cors.credentials) {
-      headers["Access-Control-Allow-Origin"] = "*";
-    }
-    else if (!opts.cors.origins || opts.cors.origins.indexOf(event.headers["origin"]) >= 0) {
-      headers["Access-Control-Allow-Origin"] = event.headers["origin"];
+      headers['Access-Control-Allow-Origin'] = '*';
+    } else if (!opts.cors.origins || opts.cors.origins.indexOf(event.headers.origin) >= 0) {
+      headers['Access-Control-Allow-Origin'] = event.headers.origin;
     } else {
       return null;
     }
 
     if (opts.cors.credentials) {
-      headers["Access-Control-Allow-Credentials"] = true;
+      headers['Access-Control-Allow-Credentials'] = true;
     }
   }
 
@@ -32,14 +45,18 @@ function createCorsHeaders(opts: HTTPOptions, event: HTTPEvent<any>): Headers | 
 }
 
 export function HTTP(options?: HTTPOptions) {
-  const opts = options || {};
-  const deserialize = (body: string | null | undefined): any => JSON.parse(body || "null");
-  const serialize = (body: any): string => JSON.stringify(body);
+  const opts: HTTPOptions = options || {};
+  function deserialize(body: string | null | undefined): any {
+    return JSON.parse(body || 'null');
+  }
+  function serialize(body: any): string {
+    return JSON.stringify(body);
+  }
 
-  return (target: Object, name: string, desc: TypedPropertyDescriptor<HandlerFunction>) => {
-    const handler = desc.value!.decorated || desc.value!;
+  return (target: Object, name: string, desc: TypedPropertyDescriptor<HandlerFunction>): void => {
+    const handler: HandlerFunction = desc.value!.decorated || desc.value!;
 
-    desc.value!.decorated = function httpHandler(this: FunctionHandler, event: APIGatewayEvent): Promise<ProxyResult> {
+    function httpHandler(this: FunctionHandler, event: APIGatewayEvent): Promise<ProxyResult> {
       const httpEvent: HTTPEvent<any> = {
         method: event.httpMethod,
         headers: event.headers,
@@ -51,25 +68,29 @@ export function HTTP(options?: HTTPOptions) {
         body: deserialize(event.body)
       };
 
-      const headers = createCorsHeaders(opts, httpEvent);
+      const headers: Headers | null = createCorsHeaders(opts, httpEvent);
       if (!headers) {
         return Promise.resolve({
           statusCode: 400,
           headers: {},
-          body: ""
+          body: ''
         });
       }
       this.resp.headers = headers;
 
-      const toResult = (resp: HTTPResponse<any>) => Promise.resolve({
-        statusCode: resp.code,
-        headers: resp.headers,
-        body: serialize(resp.body)
-      });
+      function toResult(resp: HTTPResponse<{}>): Promise<ProxyResult> {
+        return Promise.resolve({
+          statusCode: resp.code,
+          headers: resp.headers,
+          body: serialize(resp.body)
+        });
+      }
 
       return handler.call(this, httpEvent)
-        .then((resp: HTTPResponse<any>) => toResult(resp))
-        .catch((err: any) => err instanceof HTTPResponse ? toResult(err) : Promise.reject(err))
-    };
-  }
+        .then(toResult)
+        .catch((err: {}) => err instanceof HTTPResponse ? toResult(err) : Promise.reject(err));
+    }
+
+    desc.value!.decorated = httpHandler;
+  };
 }

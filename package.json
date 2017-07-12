@@ -11,6 +11,9 @@
     "aws-sdk": "^2.82.0",
     "jasmine": "^2.6.0",
     "nyc": "^11.0.3",
+    "tslint": "^5.5.0",
+    "tslint-language-service": "^0.9.6",
+    "tslint-microsoft-contrib": "^5.0.1",
     "typescript": "^2.4.1"
   },
   "scripts": {

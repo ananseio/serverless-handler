@@ -1,0 +1,24 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint-microsoft-contrib"
+    ],
+    "jsRules": {},
+    "rules": {
+        "no-relative-imports": false,
+        "missing-jsdoc": false,
+        "promise-function-async": false,
+        "prefer-type-cast": false,
+        "strict-boolean-expressions": false,
+        "no-any": false,
+        "no-unsafe-any": false,
+        "no-invalid-this": false,
+        "no-non-null-assertion": false,
+        "no-void-expression": false,
+        "mocha-unneeded-done": false,
+        "function-name": false,
+        "interface-name": false,
+        "typedef": false
+    },
+    "rulesDirectory": []
+}

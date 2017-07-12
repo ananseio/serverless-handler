@@ -1,16 +1,35 @@
-import { resp } from "./resp";
+import { resp } from './resp';
 
 export interface HandlerFunction {
+  decorated?: HandlerFunction;
+
   (event: any): Promise<any>;
   call(thisArg: FunctionHandler<any>, event: any): Promise<any>;
-
-  decorated?: HandlerFunction;
 }
 
+/**
+ * Serverless function handler class
+ */
 export class FunctionHandler<Context> {
-  resp = resp;
+  /**
+   *  Raw event passed to the function handler.
+   */
+  public rawEvent: any;
 
-  constructor(public rawEvent: any, public context: Context) {
+  /**
+   *  Context object passed to the function handler.
+   */
+  public context: Context;
+
+  /**
+   *  HTTP response helper.
+   */
+  public resp: typeof resp;
+
+  constructor(rawEvent: any, context: Context) {
+    this.rawEvent = rawEvent;
+    this.context = context;
+    this.resp = resp;
     this.resp.headers = {};
   }
 }

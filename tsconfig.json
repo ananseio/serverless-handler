@@ -1,13 +1,19 @@
 {
-  "compilerOptions": {
-    "target": "ES2015",
-    "module": "commonjs",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "inlineSourceMap": true,
-    "declaration": true,
-    "experimentalDecorators": true
-  },
-  "compileOnSave": true
+    "compilerOptions": {
+        "target": "ES2015",
+        "module": "commonjs",
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "strict": true,
+        "inlineSourceMap": true,
+        "declaration": true,
+        "experimentalDecorators": true,
+        "baseUrl": ".",
+        "plugins": [{
+            "name": "tslint-language-service",
+            "ignoreDefinitionFiles": true,
+            "configFile": "./tslint.json"
+        }]
+    },
+    "compileOnSave": true
 }

@@ -1,2 +1,2 @@
-export { HTTP } from "./HTTP";
-export { FunctionHandler, Handler } from "./FunctionHandler";
+export { HTTP } from './HTTP';
+export { FunctionHandler, Handler } from './FunctionHandler';

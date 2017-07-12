@@ -1,12 +1,12 @@
 export interface StringMap {
-  [name: string]: string
+  [name: string]: string;
 }
 
 export interface Headers {
   [header: string]: boolean | number | string;
 }
 
-export interface HTTPEvent<Body=never> {
+export interface HTTPEvent<Body= never> {
   method: string;
   headers: StringMap;
   path: string;
@@ -17,10 +17,13 @@ export interface HTTPEvent<Body=never> {
   body: Body;
 }
 
+/**
+ * HTTP response
+ */
 export class HTTPResponse<Body> {
-  code: number;
-  headers: Headers;
-  body: Body;
+  public code: number;
+  public headers: Headers;
+  public body: Body;
 
   /**
    * Creates a new HTTP response
@@ -38,11 +41,12 @@ export class HTTPResponse<Body> {
    * Add a new header to the response
    * @returns this for call chaining
    */
-  header(name: string, value: boolean | number | string): this {
+  public header(name: string, value: boolean | number | string): this {
     this.headers = {
       [name]: value,
       ...this.headers
     };
+
     return this;
   }
 }

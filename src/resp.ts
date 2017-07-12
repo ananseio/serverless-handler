@@ -1,4 +1,4 @@
-import { Headers, HTTPResponse } from "./HTTP";
+import { Headers, HTTPResponse } from './HTTP';
 
 export function resp<Body>(code: number, body?: Body): HTTPResponse<Body> {
   return new HTTPResponse(code, resp.headers, body);
@@ -7,38 +7,58 @@ export function resp<Body>(code: number, body?: Body): HTTPResponse<Body> {
 export namespace resp {
   export let headers: Headers;
 
-  // 2XX
+  /**
+   * 200 OK
+   */
   export function ok<Body>(body?: Body) {
     return resp(200, body);
   }
 
-  // 3XX
+  /**
+   * 301 Moved Permanently
+   */
   export function moved(location: string) {
-    return resp(301).header("Location", location);
+    return resp(301).header('Location', location);
   }
 
+  /**
+   * 302 Found
+   */
   export function found(location: string) {
-    return resp(302).header("Location", location);
+    return resp(302).header('Location', location);
   }
 
-  // 4XX
+  /**
+   * 400 Bad Request
+   */
   export function badRequest<Body>(body?: Body) {
     return resp(400, body);
   }
 
+  /**
+   * 401 Unauthorized
+   */
   export function unauthorized<Body>(body?: Body) {
     return resp(401, body);
   }
 
+  /**
+   * 403 Forbidden
+   */
   export function forbidden<Body>(body?: Body) {
     return resp(403, body);
   }
 
+  /**
+   * 404 Not Found
+   */
   export function notFound<Body>(body?: Body) {
     return resp(404, body);
   }
 
-  // 5XX
+  /**
+   * 500 Internal Server Error
+   */
   export function internalError<Body>(body?: Body) {
     return resp(500, body);
   }
