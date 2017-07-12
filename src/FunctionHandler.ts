@@ -10,7 +10,7 @@ export interface HandlerFunction {
 export class FunctionHandler<Context> {
   resp = resp;
 
-  constructor(protected rawEvent: any, protected context: Context) {
+  constructor(public rawEvent: any, public context: Context) {
     this.resp.headers = {};
   }
 }

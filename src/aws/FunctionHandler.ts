@@ -13,23 +13,24 @@ export function Handler(target: Object, name: string, desc: TypedPropertyDescrip
   const handler = desc.value!.decorated || desc.value!;
 
   const wrapper = (event: any, context: Context, callback?: Callback) => {
+    let promise: Promise<any>;
     try {
       const handlerObj: FunctionHandler = new ctor(event, context);
 
-      const promise = handler.call(handlerObj, event) as Promise<any>;
+      promise = handler.call(handlerObj, event) as Promise<any>;
       if (callback) {
         promise
           .then(result => callback(undefined, result))
           .catch(error => callback(error));
       }
 
-      return promise;
     } catch (error) {
+      promise = Promise.reject(error);
       if (callback) {
-        callback(error);
+        promise.catch(error => callback(error));
       }
-      return Promise.reject(error);
     }
+    return promise;
   };
 
   (ctor as any)[name] = wrapper;

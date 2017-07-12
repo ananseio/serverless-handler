@@ -11,7 +11,7 @@ export interface HTTPEvent<Body=never> {
   headers: StringMap;
   path: string;
 
-  parameters:StringMap;
+  parameters: StringMap;
   query: StringMap;
 
   body: Body;
@@ -26,9 +26,9 @@ export class HTTPResponse<Body> {
    * Creates a new HTTP response
    * @param   statusCode  The HTTP status code
    */
-  constructor(code: number, headers: Headers, body?: Body) {
+  constructor(code: number, headers?: Headers, body?: Body) {
     this.code = code;
-    this.headers = { ...headers };
+    this.headers = { ...headers || {} };
     if (body) {
       this.body = body;
     }
@@ -41,18 +41,8 @@ export class HTTPResponse<Body> {
   header(name: string, value: boolean | number | string): this {
     this.headers = {
       [name]: value,
-      ...(this.headers || {})
+      ...this.headers
     };
-    return this;
-  }
-
-  /**
-   * Set the content of the response
-   * @param content   the content as a JS object
-   * @returns this for call chaining
-   */
-  content(content: any): this {
-    this.body = content;
     return this;
   }
 }
