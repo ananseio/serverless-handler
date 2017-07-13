@@ -1,2 +1,4 @@
 export { HTTPEvent, HTTPResponse, Headers } from './HTTP';
-export { FunctionHandler, HandlerFunction } from './FunctionHandler';
+
+import * as AWS from './aws';
+export { AWS };
