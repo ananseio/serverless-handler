@@ -1,5 +1,5 @@
 {
-  "name": "serverless-runtime",
+  "name": "serverless-handler",
   "version": "1.0.0",
   "main": "index.js",
   "author": "kiootic <kiootic@gmail.com>",
