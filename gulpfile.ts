@@ -45,32 +45,6 @@ gulp.task('test', ['build'], () => {
     .pipe(jasmine());
 });
 
-gulp.task('new-version', () => {
-  const ver = semver.valid(yargs.argv.ver);
-  const pkg = JSON.parse(fs.readFileSync("package.json").toString());
-
-  if (!ver || !semver.gt(ver, pkg.version)) {
-    console.log("invalid version.");
-    return;
-  }
-
-  pkg.version = ver;
-  fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-
-  const verString = `v${ver}`;
-  if (ps.spawnSync('git', ['add', 'package.json'], { stdio: 'inherit' }).status !== 0) {
-    console.log("failed to add package.json");
-  }
-  else if (ps.spawnSync('git', ['commit', '-m', verString], { stdio: 'inherit' }).status !== 0) {
-    console.log("failed to commit.");
-  }
-  else if (ps.spawnSync('git', ['tag', '-a', verString, '-m', verString], { stdio: 'inherit' }).status !== 0) {
-    console.log("failed to tag.");
-  } else {
-    console.log("done.");
-  }
-});
-
 gulp.task('publish', ['build'], () => {
   const pkg = JSON.parse(fs.readFileSync("package.json").toString());
   pkg.main = 'index.js';
