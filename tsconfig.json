@@ -7,7 +7,7 @@
         "plugins": [{
             "name": "tslint-language-service",
             "ignoreDefinitionFiles": true,
-            "configFile": "../tslint.json"
+            "configFile": "./tslint.json"
         }]
     },
     "compileOnSave": true

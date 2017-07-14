@@ -1,10 +1,9 @@
+/* tslint:disable:import-name no-require-imports */
+import * as ps from 'child_process';
+import * as fs from 'fs';
 import * as gulp from 'gulp';
 import * as ts from 'gulp-typescript';
 import * as path from 'path';
-import * as fs from 'fs';
-import * as ps from 'child_process';
-import * as yargs from 'yargs';
-import * as semver from 'semver';
 import merge = require('merge-stream');
 import jasmine = require('gulp-jasmine');
 import del = require('del');
@@ -46,7 +45,7 @@ gulp.task('test', ['build'], () => {
 });
 
 gulp.task('publish', ['build'], () => {
-  const pkg = JSON.parse(fs.readFileSync("package.json").toString());
+  const pkg = JSON.parse(fs.readFileSync('package.json').toString());
   pkg.main = 'index.js';
   pkg.types = 'index.d.js';
   delete pkg.private;
