@@ -3,6 +3,8 @@ import * as ts from 'gulp-typescript';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as ps from 'child_process';
+import * as yargs from 'yargs';
+import * as semver from 'semver';
 import merge = require('merge-stream');
 import jasmine = require('gulp-jasmine');
 import del = require('del');
@@ -41,6 +43,23 @@ gulp.task('watch', ['build'], () => {
 gulp.task('test', ['build'], () => {
   return gulp.src(testGlob)
     .pipe(jasmine());
+});
+
+gulp.task('new-version', () => {
+  const ver = semver.valid(yargs.argv.ver);
+  const pkg = JSON.parse(fs.readFileSync("package.json").toString());
+
+  if (!ver || !semver.lt(ver, pkg.version)) {
+    console.log("invalid version.");
+    return;
+  }
+
+  pkg.version = ver;
+  fs.writeFileSync('dist/package.json', JSON.stringify(pkg, null, 2));
+
+  const verString = `v${ver}`;
+  ps.spawnSync('git', ['commit', '-m', verString], { stdio: 'inherit' });
+  ps.spawnSync('git', ['tag', '-a', verString, '-m', verString], { stdio: 'inherit' });
 });
 
 gulp.task('publish', ['build'], () => {
