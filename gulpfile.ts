@@ -1,6 +1,8 @@
 import * as gulp from 'gulp';
 import * as ts from 'gulp-typescript';
 import * as path from 'path';
+import * as fs from 'fs';
+import * as ps from 'child_process';
 import merge = require('merge-stream');
 import jasmine = require('gulp-jasmine');
 import del = require('del');
@@ -11,7 +13,7 @@ const srcGlob = 'src/**/*.ts';
 const distGlob = 'dist/**/*.js';
 const testGlob = 'dist/**/*.spec.js';
 
-gulp.task('default',['build']);
+gulp.task('default', ['build']);
 
 gulp.task('clean', () => {
   return del(distGlob);
@@ -39,4 +41,15 @@ gulp.task('watch', ['build'], () => {
 gulp.task('test', ['build'], () => {
   return gulp.src(testGlob)
     .pipe(jasmine());
+});
+
+gulp.task('publish', ['build'], () => {
+  const pkg = JSON.parse(fs.readFileSync("package.json").toString());
+  pkg.main = 'index.js';
+  pkg.types = 'index.d.js';
+  delete pkg.private;
+  fs.writeFileSync('dist/package.json', JSON.stringify(pkg, null, 2));
+
+  process.chdir('dist');
+  ps.spawnSync('npm', ['publish'], { stdio: 'inherit' });
 });

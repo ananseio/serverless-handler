@@ -5,6 +5,8 @@ machine:
     PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
 
 dependencies:
+  pre:
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
   override:
     - yarn
   post:
@@ -15,6 +17,13 @@ dependencies:
 test:
   override:
     - yarn test
+
+deployment:
+  release:
+    tag: /v[0-9]+(\.[0-9]+)*/
+    owner: ananseio
+    commands:
+      - gulp publish
 
 general:
   artifacts:
