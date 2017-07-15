@@ -6,7 +6,7 @@ export interface Headers {
   [header: string]: boolean | number | string;
 }
 
-export interface HTTPEvent<Body= never> {
+export interface HTTPEvent<Body = never> {
   method: string;
   headers: StringMap;
   path: string;

@@ -44,6 +44,11 @@ function createCorsHeaders(opts: HTTPOptions, event: HTTPEvent<{}>): Headers | n
   return headers;
 }
 
+export namespace HTTP {
+  export type Event<Body = never> = HTTPEvent<Body>;
+  export type Response<Body> = HTTPResponse<Body>;
+}
+
 export function HTTP(options?: HTTPOptions) {
   const opts: HTTPOptions = options || {};
   function deserialize(body: string | null | undefined): any {
