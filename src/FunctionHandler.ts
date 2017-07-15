@@ -1,10 +1,10 @@
 import { resp } from './resp';
 
-export interface HandlerFunction {
+export interface HandlerFunction<Context = any, Event = any, Response = any> {
   decorated?: HandlerFunction;
 
-  (event: any): Promise<any>;
-  call(thisArg: FunctionHandler<any>, event: any): Promise<any>;
+  (event: Event): Promise<Response>;
+  call(thisArg: FunctionHandler<Context>, event: Event): Promise<Response>;
 }
 
 /**
@@ -35,5 +35,5 @@ export class FunctionHandler<Context> {
 }
 
 export interface FunctionHandlerConstructor<Handler extends FunctionHandler<any>> {
-  new(event: any, context: any): Handler;
+  new (event: any, context: any): Handler;
 }
