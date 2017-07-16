@@ -32,7 +32,9 @@ export class HTTPResponse<Body> {
   constructor(code: number, headers?: Headers, body?: Body) {
     this.code = code;
     this.headers = { ...headers || {} };
-    this.body = body || undefined;
+    if (body) {
+      this.body = body;
+    }
   }
 
   /**
