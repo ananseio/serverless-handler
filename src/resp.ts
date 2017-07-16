@@ -1,6 +1,6 @@
 import { Headers, HTTPResponse } from './HTTP';
 
-export function resp<Body>(code: number, body?: Body): HTTPResponse<Body> {
+export function resp<Body = undefined>(code: number, body?: Body): HTTPResponse<Body> {
   return new HTTPResponse(code, resp.headers, body);
 }
 
@@ -10,7 +10,7 @@ export namespace resp {
   /**
    * 200 OK
    */
-  export function ok<Body>(body?: Body) {
+  export function ok<Body = undefined>(body?: Body) {
     return resp(200, body);
   }
 
@@ -31,35 +31,35 @@ export namespace resp {
   /**
    * 400 Bad Request
    */
-  export function badRequest<Body>(body?: Body) {
+  export function badRequest<Body = undefined>(body?: Body) {
     return resp(400, body);
   }
 
   /**
    * 401 Unauthorized
    */
-  export function unauthorized<Body>(body?: Body) {
+  export function unauthorized<Body = undefined>(body?: Body) {
     return resp(401, body);
   }
 
   /**
    * 403 Forbidden
    */
-  export function forbidden<Body>(body?: Body) {
+  export function forbidden<Body = undefined>(body?: Body) {
     return resp(403, body);
   }
 
   /**
    * 404 Not Found
    */
-  export function notFound<Body>(body?: Body) {
+  export function notFound<Body = undefined>(body?: Body) {
     return resp(404, body);
   }
 
   /**
    * 500 Internal Server Error
    */
-  export function internalError<Body>(body?: Body) {
+  export function internalError<Body = undefined>(body?: Body) {
     return resp(500, body);
   }
 }

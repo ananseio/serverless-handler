@@ -35,5 +35,7 @@ export class FunctionHandler<Context> {
 }
 
 export interface FunctionHandlerConstructor<Handler extends FunctionHandler<any>> {
-  new (event: any, context: Handler['context']): Handler;
+  readonly prototype: Handler;
+
+  new(event: any, context: Handler['context']): Handler;
 }
