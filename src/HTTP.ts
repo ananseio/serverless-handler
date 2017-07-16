@@ -23,7 +23,7 @@ export interface HTTPEvent<Body = never> {
 export class HTTPResponse<Body> {
   public code: number;
   public headers: Headers;
-  public body: Body;
+  public body?: Body;
 
   /**
    * Creates a new HTTP response
@@ -32,9 +32,7 @@ export class HTTPResponse<Body> {
   constructor(code: number, headers?: Headers, body?: Body) {
     this.code = code;
     this.headers = { ...headers || {} };
-    if (body) {
-      this.body = body;
-    }
+    this.body = body || undefined;
   }
 
   /**
