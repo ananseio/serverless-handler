@@ -1,5 +1,10 @@
 import { Headers, HTTPResponse } from './HTTP';
 
+/**
+ * Creates HTTP response
+ * @param code  status code
+ * @param body  response body
+ */
 export function resp<Body = undefined>(code: number, body?: Body): HTTPResponse<Body> {
   return new HTTPResponse(code, resp.headers, body);
 }
