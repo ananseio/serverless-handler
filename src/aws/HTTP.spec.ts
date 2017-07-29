@@ -78,6 +78,14 @@ class HandlerTest extends FunctionHandler {
   public async cors4(httpEvent: HTTPEvent<string>): Promise<HTTPResponse<{ str: string }>> {
     return this.resp.ok();
   }
+
+  @Handler
+  @HTTP({ reqFormat: 'raw', respFormat: 'raw' })
+  public async testRaw(httpEvent: HTTPEvent<string>): Promise<HTTPResponse<string>> {
+    expect(httpEvent.body).toBe('test request');
+
+    return this.resp.ok('test response');
+  }
 }
 
 describe('Handler decorator', () => {
@@ -159,5 +167,21 @@ describe('Handler decorator', () => {
 
       done();
     });
+  });
+
+  it('should support raw format', async (done) => {
+    const resp: ProxyResult = {
+      statusCode: 200,
+      headers: {},
+      body: 'test response'
+    };
+    expect(await ((HandlerTest as any)).testRaw(
+      {
+        ...event,
+        body: 'test request'
+      },
+      context)).toEqual(resp);
+
+    done();
   });
 });

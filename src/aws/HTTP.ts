@@ -3,11 +3,18 @@ import { HandlerFunction } from '../FunctionHandler';
 import { Headers, HTTPEvent, HTTPResponse } from '../HTTP';
 import { FunctionHandler } from './FunctionHandler';
 
+export type DataFormat = 'json' | 'raw';
+
 export interface HTTPOptions {
   /**
-   * Request/Response body format. Only `json` is supported
+   * Request body format
    */
-  format?: 'json';
+  reqFormat?: DataFormat;
+
+  /**
+   * Response body format.
+   */
+  respFormat?: DataFormat;
 
   /**
    *  CORS options
@@ -51,12 +58,14 @@ export namespace HTTP {
 
 export function HTTP(options?: HTTPOptions) {
   const opts: HTTPOptions = options || {};
-  function deserialize(body: string | null | undefined): any {
-    return JSON.parse(body || 'null');
-  }
-  function serialize(body: any): string {
-    return JSON.stringify(body);
-  }
+
+  const deserialize: (body: string | null | undefined) => any =
+    (opts.reqFormat === 'raw' && (body => body)) ||
+    (body => JSON.parse(body || 'null'));
+
+  const serialize: (body: any) => string =
+    (opts.respFormat === 'raw' && (body => body)) ||
+    (body => JSON.stringify(body));
 
   return (target: Object, name: string, desc: TypedPropertyDescriptor<HandlerFunction>): void => {
     const handler: HandlerFunction = desc.value!.decorated || desc.value!;
