@@ -81,10 +81,10 @@ class HandlerTest extends FunctionHandler {
 
   @Handler
   @HTTP({ reqFormat: 'raw', respFormat: 'raw' })
-  public async testRaw(httpEvent: HTTPEvent<string>): Promise<HTTPResponse<string>> {
-    expect(httpEvent.body).toBe('test request');
+  public async testRaw(httpEvent: HTTPEvent<Buffer>): Promise<HTTPResponse<Buffer>> {
+    expect(httpEvent.body).toEqual(Buffer.from('test request'));
 
-    return this.resp.ok('test response');
+    return this.resp.ok(Buffer.from('test response'));
   }
 }
 
@@ -97,7 +97,8 @@ describe('Handler decorator', () => {
     const resp: ProxyResult = {
       statusCode: 200,
       headers: {},
-      body: JSON.stringify({ str: 'test' })
+      body: JSON.stringify({ str: 'test' }),
+      isBase64Encoded: false
     };
     expect(await ((HandlerTest as any)).test1(event, context)).toEqual(resp);
     expect(await ((HandlerTest as any)).test2(event, context)).toEqual(resp);
@@ -118,7 +119,11 @@ describe('Handler decorator', () => {
 
   describe('CORS policy', () => {
     it('should accept CORS request', async (done) => {
-      const respTemplate: Partial<ProxyResult> = { statusCode: 200, body: undefined };
+      const respTemplate: Partial<ProxyResult> = {
+        statusCode: 200,
+        body: undefined,
+        isBase64Encoded: false
+      };
 
       expect(await ((HandlerTest as any)).cors1(event, context)).toEqual({
         ...respTemplate,
@@ -154,7 +159,7 @@ describe('Handler decorator', () => {
     });
 
     it('should reject CORS request', async (done) => {
-      const resp: ProxyResult = { statusCode: 400, headers: {}, body: '' };
+      const resp: ProxyResult = { statusCode: 400, headers: {}, body: '', isBase64Encoded: false };
       const badEvent: APIGatewayEvent = <any>{
         httpMethod: 'POST',
         headers: {
@@ -173,12 +178,13 @@ describe('Handler decorator', () => {
     const resp: ProxyResult = {
       statusCode: 200,
       headers: {},
-      body: 'test response'
+      body: 'dGVzdCByZXNwb25zZQ==',
+      isBase64Encoded: true
     };
     expect(await ((HandlerTest as any)).testRaw(
       {
         ...event,
-        body: 'test request'
+        body: 'dGVzdCByZXF1ZXN0'
       },
       context)).toEqual(resp);
 
