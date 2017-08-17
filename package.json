@@ -6,7 +6,7 @@
   "author": "kiootic <kiootic@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/aws-lambda": "^0.0.14",
+    "@types/aws-lambda": "^0.0.16",
     "@types/gulp": "3",
     "@types/jasmine": "^2.5.53",
     "@types/merge-stream": "^1.0.28",

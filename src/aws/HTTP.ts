@@ -3,12 +3,6 @@ import { HandlerFunction } from '../FunctionHandler';
 import { Headers, HTTPEvent, HTTPResponse } from '../HTTP';
 import { FunctionHandler } from './FunctionHandler';
 
-declare module 'aws-lambda' {
-  interface ProxyResult {   // tslint:disable-line:no-shadowed-variable
-    isBase64Encoded: boolean;
-  }
-}
-
 export type DataFormat = 'json' | 'raw';
 
 export interface HTTPOptions {
