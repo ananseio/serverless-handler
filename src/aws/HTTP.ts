@@ -34,11 +34,12 @@ export interface HTTPOptions {
 
 function createCorsHeaders(opts: HTTPOptions, event: HTTPEvent<{}>): Headers | null {
   const headers: Headers = {};
-  if (opts.cors) {
+  const originHeader = event.headers.origin;
+  if (opts.cors && originHeader) {
     if (!opts.cors.origins && !opts.cors.credentials) {
       headers['Access-Control-Allow-Origin'] = '*';
-    } else if (!opts.cors.origins || opts.cors.origins.indexOf(event.headers.origin) >= 0) {
-      headers['Access-Control-Allow-Origin'] = event.headers.origin;
+    } else if (!opts.cors.origins || (opts.cors.origins.indexOf(originHeader) >= 0)) {
+      headers['Access-Control-Allow-Origin'] = originHeader;
     } else {
       return null;
     }

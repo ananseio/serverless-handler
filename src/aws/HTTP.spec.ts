@@ -132,6 +132,11 @@ describe('Handler decorator', () => {
         }
       });
 
+      expect(await ((HandlerTest as any)).cors1({...event, headers: {}}, context)).toEqual({
+        ...respTemplate,
+        headers: { }
+      });
+
       expect(await ((HandlerTest as any)).cors2(event, context)).toEqual({
         ...respTemplate,
         headers: {
