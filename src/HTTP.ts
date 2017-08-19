@@ -1,5 +1,5 @@
 export interface StringMap {
-  [name: string]: string;
+  [name: string]: string | undefined;
 }
 
 export interface Headers {
