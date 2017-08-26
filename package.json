@@ -1,6 +1,6 @@
 {
   "name": "@ananseio/serverless-handler",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "main": "dist/index.js",
   "types": "dist/index.d.js",
   "author": "kiootic <kiootic@gmail.com>",
@@ -26,7 +26,6 @@
     "tslint-microsoft-contrib": "^5.0.1",
     "typescript": "^2.4.1"
   },
-  "private": true,
   "scripts": {
     "build": "gulp build",
     "watch": "gulp watch",
